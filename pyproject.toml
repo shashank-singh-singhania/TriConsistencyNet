@@ -1,0 +1,46 @@
+[project]
+name = "triconsistencynet"
+version = "0.1.0"
+description = "Confidence-Aware Multi-Representation Learning for Generalizable and Explainable Deepfake Detection"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "torch",
+    "torchvision",
+    "numpy",
+    "pandas",
+    "opencv-python",
+    "albumentations",
+    "matplotlib",
+    "tqdm",
+    "rich",
+    "loguru",
+    "hydra-core",
+    "omegaconf",
+    "timm",
+    "einops",
+    "pillow"
+]
+
+[project.optional-dependencies]
+
+dev = [
+    "pytest",
+    "ruff",
+    "black",
+    "isort",
+    "pre-commit"
+]
+
+[tool.black]
+
+line-length = 88
+
+[tool.isort]
+
+profile = "black"
+
+[tool.ruff]
+
+line-length = 88

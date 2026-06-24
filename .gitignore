@@ -16,6 +16,8 @@ wandb/
 
 logs/
 
+*.egg-info/
+
 *.pt
 
 *.pth
