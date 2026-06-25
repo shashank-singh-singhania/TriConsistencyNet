@@ -7,16 +7,16 @@ Author: Shashank Singh
 
 Description
 -----------
-Provides a unified logger instance across the entire project.
+Provides a unified logger instance for the complete project.
 """
 
 from pathlib import Path
 
 from loguru import logger
 
-LOG_DIRECTORY = Path("logs")
 
-LOG_DIRECTORY.mkdir(exist_ok=True)
+LOG_DIRECTORY = Path("logs")
+LOG_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
 logger.remove()
 
@@ -26,11 +26,17 @@ logger.add(
     retention="14 days",
     level="INFO",
     enqueue=True,
+    format=(
+        "{time:YYYY-MM-DD HH:mm:ss} | "
+        "{level:<8} | "
+        "{name}:{function}:{line} | "
+        "{message}"
+    ),
 )
 
 logger.add(
-    sink=lambda msg: print(msg, end=""),
-    format="{level}\n{message}",
+    sink=lambda message: print(message, end=""),
+    format="{level:<8} {message}",
     level="INFO",
 )
 

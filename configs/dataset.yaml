@@ -1,0 +1,21 @@
+dataset:
+
+  root: "dataset/FaceForensics++/videos"
+
+  metadata: "dataset/FaceForensics++/videos/csv/FF++_Metadata.csv"
+
+  processed: "dataset/FaceForensics++/processed"
+
+  splits: "dataset/FaceForensics++/splits"
+
+  compression: "c23"
+
+  image_size: 224
+
+  train_ratio: 0.70
+
+  val_ratio: 0.15
+
+  test_ratio: 0.15
+
+  fps: 5

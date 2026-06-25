@@ -1,0 +1,9 @@
+model:
+
+  backbone: "tf_efficientnetv2_s"
+
+  num_classes: 2
+
+  dropout: 0.3
+
+  pretrained: true

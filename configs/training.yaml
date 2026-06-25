@@ -1,0 +1,17 @@
+training:
+
+  batch_size: 32
+
+  epochs: 30
+
+  learning_rate: 0.0001
+
+  optimizer: "AdamW"
+
+  scheduler: "CosineAnnealingLR"
+
+  num_workers: 4
+
+  pin_memory: true
+
+  mixed_precision: true

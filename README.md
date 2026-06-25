@@ -5,6 +5,7 @@ Confidence-Aware Multi-Representation Learning for Generalizable and Explainable
 ## Setup
 
 This project targets Python 3.12.
+Use Python 3.12 for dependency installation; `facenet-pytorch` does not install cleanly in the current Python 3.13 environment.
 
 Install dependencies with either of these commands from the repository root:
 

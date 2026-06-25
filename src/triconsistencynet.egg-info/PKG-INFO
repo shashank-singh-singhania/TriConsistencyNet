@@ -1,0 +1,52 @@
+Metadata-Version: 2.4
+Name: triconsistencynet
+Version: 0.1.0
+Summary: Confidence-Aware Multi-Representation Learning for Generalizable and Explainable Deepfake Detection
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: torch
+Requires-Dist: torchvision
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: opencv-python
+Requires-Dist: albumentations
+Requires-Dist: matplotlib
+Requires-Dist: tqdm
+Requires-Dist: rich
+Requires-Dist: loguru
+Requires-Dist: hydra-core
+Requires-Dist: omegaconf
+Requires-Dist: timm
+Requires-Dist: einops
+Requires-Dist: pillow
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Requires-Dist: pre-commit; extra == "dev"
+
+# TriConsistencyNet
+
+Confidence-Aware Multi-Representation Learning for Generalizable and Explainable Deepfake Detection.
+
+## Status
+
+🚧 Under Active Research
+
+## Features
+
+- Spatial Representation Learning
+- Frequency Representation Learning
+- Semantic Transformer Branch
+- Representation Consistency Module
+- Confidence-Aware Fusion
+- Explainability Guided Learning
+
+## Repository Structure
+
+See docs/PROJECT_STRUCTURE.md
+
+## License
+
+MIT

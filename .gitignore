@@ -1,25 +1,50 @@
+# Python
+
 __pycache__/
+*.pyc
+
+# Virtual Environment
 
 .venv/
 
-.ipynb_checkpoints/
+# Dataset
+
+dataset/
+datasets/
+
+# Checkpoints
 
 checkpoints/
 
-dataset/raw/
+*.pt
+*.pth
+*.ckpt
 
-dataset/processed/
-
-dataset/cache/
-
-wandb/
+# Logs
 
 logs/
 
-*.egg-info/
+wandb/
 
-*.pt
+# Notebook
 
-*.pth
+.ipynb_checkpoints/
 
-*.ckpt
+# IDE
+
+.vscode/
+.idea/
+
+# OS
+
+.DS_Store
+Thumbs.db
+
+# Cache
+
+.pytest_cache/
+.ruff_cache/
+
+# Experiments
+
+outputs/

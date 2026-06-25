@@ -1,0 +1,18 @@
+{
+    "total_videos": 4899,
+    "real_videos": 699,
+    "fake_videos": 4200,
+    "manipulation_distribution": {
+        "DeepFakeDetection": 700,
+        "Deepfakes": 700,
+        "Face2Face": 700,
+        "FaceShifter": 700,
+        "FaceSwap": 700,
+        "NeuralTextures": 700,
+        "original": 699
+    },
+    "average_frames": 513.43,
+    "average_width": 1159.09,
+    "average_height": 699.23,
+    "average_size_mb": 2.45
+}

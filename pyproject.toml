@@ -3,7 +3,7 @@ name = "triconsistencynet"
 version = "0.1.0"
 description = "Confidence-Aware Multi-Representation Learning for Generalizable and Explainable Deepfake Detection"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.12.*"
 
 dependencies = [
     "torch",
