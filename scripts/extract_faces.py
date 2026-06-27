@@ -24,7 +24,29 @@ def main():
         choices=["train", "val", "test"],
     )
 
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="Number of parallel worker processes",
+    )
+
     args = parser.parse_args()
+
+    # Diagnostics to verify GPU visibility in environment
+    try:
+        import torch
+        print("PyTorch GPU Available:", torch.cuda.is_available())
+        if torch.cuda.is_available():
+            print("PyTorch GPU Name:", torch.cuda.get_device_name(0))
+    except Exception as e:
+        print("PyTorch diagnostic failed:", e)
+
+    try:
+        import tensorflow as tf
+        print("TensorFlow GPU List:", tf.config.list_physical_devices('GPU'))
+    except Exception as e:
+        print("TensorFlow diagnostic failed:", e)
 
     split_csv = (
         PROJECT_ROOT
@@ -35,7 +57,7 @@ def main():
 
     extractor = FaceExtractor()
 
-    extractor.extract_from_split(split_csv)
+    extractor.extract_from_split(split_csv, workers=args.workers)
 
 
 if __name__ == "__main__":

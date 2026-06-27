@@ -30,6 +30,13 @@ def main():
         choices=["train", "val", "test"],
     )
 
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="Number of parallel worker processes",
+    )
+
     args = parser.parse_args()
 
     split_csv = (
@@ -41,7 +48,7 @@ def main():
 
     extractor = FrameExtractor()
 
-    extractor.extract_from_split(split_csv)
+    extractor.extract_from_split(split_csv, workers=args.workers)
 
 
 if __name__ == "__main__":
