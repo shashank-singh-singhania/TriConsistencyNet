@@ -137,7 +137,10 @@ class FaceExtractor:
             import multiprocessing
             num_workers = min(workers, 16)
             project_logger.info(f"Extracting faces using {num_workers} parallel workers on GPU...")
-            with multiprocessing.Pool(processes=num_workers) as pool:
+            with multiprocessing.Pool(
+                processes=num_workers,
+                initializer=_init_faces_worker,
+            ) as pool:
                 list(tqdm(
                     pool.imap_unordered(_extract_faces_worker, tasks),
                     total=len(tasks),
@@ -149,8 +152,7 @@ class FaceExtractor:
                 self.extract_video(manipulation, video_name)
 
 
-def _extract_faces_worker(task):
-    manipulation, video_name = task
+def _init_faces_worker():
     try:
         import tensorflow as tf
         gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -160,6 +162,12 @@ def _extract_faces_worker(task):
     except Exception:
         pass
 
+    global _worker_extractor
     from src.datasets.face_extractor import FaceExtractor
-    extractor = FaceExtractor()
-    extractor.extract_video(manipulation, video_name)
+    _worker_extractor = FaceExtractor()
+
+
+def _extract_faces_worker(task):
+    manipulation, video_name = task
+    global _worker_extractor
+    _worker_extractor.extract_video(manipulation, video_name)

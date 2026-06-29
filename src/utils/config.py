@@ -29,7 +29,7 @@ class ConfigLoader:
                 f"Configuration file not found: {config_path}"
             )
 
-        project_logger.info(f"Loading config: {filename}")
+        project_logger.debug(f"Loading config: {filename}")
 
         return OmegaConf.load(config_path)
 

@@ -149,7 +149,10 @@ class FrameExtractor:
 
             project_logger.info(f"Extracting frames using {num_workers} parallel workers...")
 
-            with multiprocessing.Pool(processes=num_workers) as pool:
+            with multiprocessing.Pool(
+                processes=num_workers,
+                initializer=_init_worker,
+            ) as pool:
 
                 list(tqdm(
 
@@ -178,8 +181,15 @@ class FrameExtractor:
         self.extract_from_dataframe(dataframe, workers=workers)
 
 
+def _init_worker():
+
+    global _worker_extractor
+
+    _worker_extractor = FrameExtractor()
+
+
 def _extract_video_worker(relative_video_path: str):
 
-    extractor = FrameExtractor()
+    global _worker_extractor
 
-    extractor.extract_video(relative_video_path)
+    _worker_extractor.extract_video(relative_video_path)
