@@ -9,8 +9,8 @@ __pycache__/
 
 # Dataset
 
-dataset/
-datasets/
+/dataset/
+/datasets/
 
 # Checkpoints
 
