@@ -135,9 +135,10 @@ class FaceExtractor:
 
         if workers is not None and workers > 1:
             import multiprocessing
+            ctx = multiprocessing.get_context('spawn')
             num_workers = min(workers, 16)
             project_logger.info(f"Extracting faces using {num_workers} parallel workers on GPU...")
-            with multiprocessing.Pool(
+            with ctx.Pool(
                 processes=num_workers,
                 initializer=_init_faces_worker,
             ) as pool:
