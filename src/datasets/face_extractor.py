@@ -63,11 +63,16 @@ class FaceExtractor:
             input_dir.glob("*.png")
         )
 
-        saved = 0
+        # 1. Parallel pre-load of all frames in the video into RAM
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            images = list(executor.map(lambda p: cv2.imread(str(p)), image_paths))
 
-        for image_path in image_paths:
+        write_tasks = []
 
-            image = cv2.imread(str(image_path))
+        for image_path, image in zip(image_paths, images):
+            if image is None:
+                continue
 
             faces = RetinaFace.detect_faces(image)
 
@@ -109,15 +114,16 @@ class FaceExtractor:
                 / image_path.name
             )
 
-            cv2.imwrite(
-                str(output_path),
-                crop,
-            )
+            # Queue write task for parallel writing to disk
+            write_tasks.append((output_path, crop))
 
-            saved += 1
+        # 2. Parallel write cropped faces back to disk
+        if write_tasks:
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                executor.map(lambda task: cv2.imwrite(str(task[0]), task[1]), write_tasks)
 
         project_logger.success(
-            f"{manipulation}/{video_name} : {saved} faces"
+            f"{manipulation}/{video_name} : {len(write_tasks)} faces"
         )
 
     def extract_from_split(self, split_csv: str, workers=None):
