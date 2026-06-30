@@ -129,8 +129,11 @@ class FrequencyGuidanceEncoder(nn.Module):
     @staticmethod
     def fft_preprocess(x):
 
+        # Force float32 for FFT to avoid extremely slow float16 complex operations under autocast
+        x_f32 = x.float()
+
         fft = torch.fft.fft2(
-            x,
+            x_f32,
             norm="ortho",
         )
 
@@ -154,7 +157,7 @@ class FrequencyGuidanceEncoder(nn.Module):
             max_val - min_val + 1e-8
         )
 
-        return magnitude
+        return magnitude.to(x.dtype)
 
     def forward(self, x):
 
