@@ -87,7 +87,7 @@ def main():
     project_logger.info(f"Accuracy:  {test_metrics['accuracy'] * 100:.2f}%")
     project_logger.info(f"Precision: {test_metrics['precision'] * 100:.2f}%")
     project_logger.info(f"Recall:    {test_metrics['recall'] * 100:.2f}%")
-    project_logger.info(f"F1-score:  {test_metrics['f1_score'] * 100:.2f}%")
+    project_logger.info(f"F1-score:  {test_metrics['f1'] * 100:.2f}%")
     project_logger.info(f"ROC-AUC:   {test_metrics['roc_auc'] * 100:.4f}")
     project_logger.info(f"Confusion Matrix:\n{test_metrics['confusion_matrix']}")
 
