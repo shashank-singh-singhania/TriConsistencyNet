@@ -62,7 +62,7 @@ class Metrics:
             ),
         }
 
-        if probabilities is not None:
+        if probabilities is not None and len(np.unique(targets)) > 1:
 
             probabilities = np.asarray(probabilities)
 
@@ -70,5 +70,7 @@ class Metrics:
                 targets,
                 probabilities,
             )
+        else:
+            results["roc_auc"] = 0.0
 
         return results
