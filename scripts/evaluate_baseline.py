@@ -102,7 +102,8 @@ def main():
 
     # 10. Generate and Save ROC / PR Curves
     labels = test_results["labels"]
-    probs = test_results["probabilities"][:, 1]  # Probabilities of the positive class (FAKE)
+    import numpy as np
+    probs = np.asarray(test_results["probabilities"])
 
     # ROC Curve
     fpr, tpr, _ = roc_curve(labels, probs)
