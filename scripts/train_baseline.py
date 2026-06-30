@@ -25,6 +25,7 @@ from src.trainer.metrics import Metrics
 from src.trainer.trainer import Trainer
 from src.utils.config import ConfigLoader
 from src.utils.logger import project_logger
+from src.utils.seed import set_seed
 
 
 def main():
@@ -33,10 +34,15 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Run a quick verification dry-run")
     args = parser.parse_args()
 
+    # Set random seeds for reproducibility
+    set_seed(42)
+
     project_logger.info("Initializing baseline training...")
 
     # 1. Setup Experiment Directories and copy configurations for reproducibility
     import shutil
+    import subprocess
+
     experiment_dir = PROJECT_ROOT / "experiments" / "baseline"
     checkpoint_dir = experiment_dir / "checkpoints"
     metrics_dir = experiment_dir / "metrics"
@@ -45,6 +51,16 @@ def main():
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     metrics_dir.mkdir(parents=True, exist_ok=True)
     config_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save exact Git commit hash
+    try:
+        git_hash = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=str(PROJECT_ROOT)).decode("utf-8").strip()
+    except Exception:
+        git_hash = "unknown"
+
+    with open(config_dir / "git_commit.txt", "w") as f:
+        f.write(git_hash)
+    project_logger.info(f"Saved git commit hash: {git_hash}")
 
     for config_name in ["model.yaml", "training.yaml", "dataset.yaml"]:
         src_file = PROJECT_ROOT / "configs" / config_name
