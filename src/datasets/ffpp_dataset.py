@@ -33,7 +33,7 @@ class FFPPDataset(Dataset):
 
         self.image_size = config.dataset.image_size
 
-        metadata_df = pd.read_csv(metadata_csv)
+        metadata_df = pd.read_csv(metadata_csv, low_memory=False)
 
         split_df = pd.read_csv(split_csv)
 

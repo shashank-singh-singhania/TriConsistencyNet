@@ -83,7 +83,7 @@ def main():
 
     # 2. Compute Class Weights to handle dataset imbalance
     if metadata_csv.exists():
-        metadata_df = pd.read_csv(metadata_csv)
+        metadata_df = pd.read_csv(metadata_csv, low_memory=False)
         class_counts = metadata_df["label"].value_counts()
         n_samples = len(metadata_df)
         n_classes = 2
