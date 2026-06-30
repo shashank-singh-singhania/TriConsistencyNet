@@ -35,7 +35,23 @@ def main():
 
     project_logger.info("Initializing baseline training...")
 
-    # 1. Load Configurations
+    # 1. Setup Experiment Directories and copy configurations for reproducibility
+    import shutil
+    experiment_dir = PROJECT_ROOT / "experiments" / "baseline"
+    checkpoint_dir = experiment_dir / "checkpoints"
+    metrics_dir = experiment_dir / "metrics"
+    config_dir = experiment_dir / "config"
+
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+    config_dir.mkdir(parents=True, exist_ok=True)
+
+    for config_name in ["model.yaml", "training.yaml", "dataset.yaml"]:
+        src_file = PROJECT_ROOT / "configs" / config_name
+        if src_file.exists():
+            shutil.copy(src_file, config_dir / config_name)
+
+    # 2. Load Configurations
     training_config = ConfigLoader().load("training.yaml")
     dataset_config = ConfigLoader().load("dataset.yaml")
 
@@ -129,10 +145,13 @@ def main():
     )
 
     checkpoint_manager = CheckpointManager(
-        checkpoint_directory=PROJECT_ROOT / "checkpoints"
+        checkpoint_directory=checkpoint_dir
     )
 
     best_val_acc = -1.0
+
+    train_history = []
+    val_history = []
 
     # 8. Training Loop
     project_logger.info(f"Starting baseline training for {epochs} epochs...")
@@ -171,6 +190,20 @@ def main():
                 f"Val Loss: {val_loss:.4f} | Val Acc: {val_acc * 100:.2f}%"
             )
 
+        # Append metrics history (converting numpy arrays to lists for JSON compatibility)
+        train_metrics_json = train_metrics.copy()
+        train_metrics_json["confusion_matrix"] = train_metrics_json["confusion_matrix"].tolist()
+        train_metrics_json["epoch"] = epoch
+        train_metrics_json["loss"] = train_results["loss"]
+        train_history.append(train_metrics_json)
+
+        if len(val_loader.dataset) > 0:
+            val_metrics_json = val_metrics.copy()
+            val_metrics_json["confusion_matrix"] = val_metrics_json["confusion_matrix"].tolist()
+            val_metrics_json["epoch"] = epoch
+            val_metrics_json["loss"] = val_loss
+            val_history.append(val_metrics_json)
+
         # Save Latest Checkpoint
         checkpoint_manager.save(
             model=model,
@@ -197,6 +230,15 @@ def main():
         # Step Scheduler
         if scheduler is not None:
             scheduler.step()
+
+    # Save metrics histories to JSON files
+    import json
+    with open(metrics_dir / "train_metrics.json", "w") as f:
+        json.dump(train_history, f, indent=4)
+    if val_history:
+        with open(metrics_dir / "val_metrics.json", "w") as f:
+            json.dump(val_history, f, indent=4)
+    project_logger.info(f"Training metrics histories saved successfully in: {metrics_dir}")
 
 
 if __name__ == "__main__":

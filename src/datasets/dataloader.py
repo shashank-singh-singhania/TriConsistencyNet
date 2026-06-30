@@ -95,6 +95,9 @@ def get_dataloaders(
         shuffle=True,
         num_workers=num_workers,
         pin_memory=pin_memory,
+        drop_last=True,
+        persistent_workers=True if num_workers > 0 else False,
+        prefetch_factor=4 if num_workers > 0 else None,
     )
 
     val_loader = DataLoader(
@@ -103,6 +106,9 @@ def get_dataloaders(
         shuffle=False,
         num_workers=num_workers,
         pin_memory=pin_memory,
+        drop_last=False,
+        persistent_workers=True if num_workers > 0 else False,
+        prefetch_factor=4 if num_workers > 0 else None,
     )
 
     test_loader = DataLoader(
@@ -111,6 +117,9 @@ def get_dataloaders(
         shuffle=False,
         num_workers=num_workers,
         pin_memory=pin_memory,
+        drop_last=False,
+        persistent_workers=True if num_workers > 0 else False,
+        prefetch_factor=4 if num_workers > 0 else None,
     )
 
     return train_loader, val_loader, test_loader
