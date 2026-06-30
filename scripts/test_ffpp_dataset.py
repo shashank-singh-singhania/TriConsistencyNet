@@ -19,7 +19,17 @@ def main():
         / "face_metadata.csv"
     )
 
-    dataset = FFPPDataset(metadata)
+    train_split = (
+        PROJECT_ROOT
+        / "dataset"
+        / "splits"
+        / "train.csv"
+    )
+
+    dataset = FFPPDataset(
+        metadata_csv=metadata,
+        split_csv=train_split,
+    )
 
     print()
 

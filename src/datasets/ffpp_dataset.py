@@ -9,11 +9,13 @@ Author: Shashank Singh
 from pathlib import Path
 
 import cv2
+import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
 from src.utils.config import ConfigLoader
+from src.utils.logger import project_logger
 
 
 class FFPPDataset(Dataset):
@@ -21,16 +23,31 @@ class FFPPDataset(Dataset):
     def __init__(
         self,
         metadata_csv,
+        split_csv,
         transform=None,
     ):
-
-        self.dataframe = pd.read_csv(metadata_csv)
 
         self.transform = transform
 
         config = ConfigLoader().load("dataset.yaml")
 
         self.image_size = config.dataset.image_size
+
+        metadata_df = pd.read_csv(metadata_csv)
+
+        split_df = pd.read_csv(split_csv)
+
+        # Use a combined (video_id, manipulation) key to prevent cross-manipulation subject leakage
+        split_df["video_id"] = split_df["File Path"].apply(lambda x: Path(x).stem).astype(str)
+        allowed_keys = set(
+            split_df["video_id"] + "_" + split_df["Manipulation"].astype(str)
+        )
+
+        metadata_keys = metadata_df["video_id"].astype(str) + "_" + metadata_df["manipulation"].astype(str)
+
+        self.dataframe = metadata_df[
+            metadata_keys.isin(allowed_keys)
+        ].reset_index(drop=True)
 
     def __len__(self):
 
@@ -44,10 +61,17 @@ class FFPPDataset(Dataset):
 
         image = cv2.imread(str(image_path))
 
-        image = cv2.cvtColor(
-            image,
-            cv2.COLOR_BGR2RGB,
-        )
+        if image is None:
+            # Gracefully handle missing files during local development/testing on laptop
+            image = np.zeros(
+                (self.image_size, self.image_size, 3),
+                dtype=np.uint8,
+            )
+        else:
+            image = cv2.cvtColor(
+                image,
+                cv2.COLOR_BGR2RGB,
+            )
 
         if self.transform is not None:
 
@@ -67,7 +91,12 @@ class FFPPDataset(Dataset):
 
             "image": image,
 
-            "label": torch.tensor(label),
+            "label": torch.tensor(
+                label,
+                dtype=torch.long,
+            ),
+
+            "image_path": str(image_path),
 
             "manipulation": row["manipulation"],
 
