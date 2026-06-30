@@ -162,12 +162,22 @@ class FaceExtractor:
 def _init_faces_worker():
     try:
         import tensorflow as tf
-        gpus = tf.config.experimental.list_physical_devices('GPU')
+        gpus = tf.config.list_physical_devices('GPU')
         if gpus:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
+            # Limit VRAM per worker process to 3500 MB to prevent GPU OOM in parallel execution
+            tf.config.set_logical_device_configuration(
+                gpus[0],
+                [tf.config.LogicalDeviceConfiguration(memory_limit=3500)]
+            )
     except Exception:
-        pass
+        try:
+            import tensorflow as tf
+            gpus = tf.config.list_physical_devices('GPU')
+            if gpus:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+        except Exception:
+            pass
 
     global _worker_extractor
     from src.datasets.face_extractor import FaceExtractor
