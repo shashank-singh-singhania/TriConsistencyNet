@@ -100,9 +100,9 @@ class FFPPDataset(Dataset):
 
             "image_path": str(image_path),
 
-            "manipulation": row["manipulation"],
+            "manipulation": str(row["manipulation"]),
 
-            "video_id": row["video_id"],
+            "video_id": str(row["video_id"]),
 
             "frame_name": str(row["frame_name"]).zfill(6),
         }
