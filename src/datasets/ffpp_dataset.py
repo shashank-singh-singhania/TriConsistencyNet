@@ -58,7 +58,7 @@ class FFPPDataset(Dataset):
         row = self.dataframe.iloc[index]
 
         # Resolve the image path as absolute relative to the project root
-        project_root = Path(__file__).resolve().parents[3]
+        project_root = Path(__file__).resolve().parents[2]
         image_path = project_root / row["face_path"]
 
         image = cv2.imread(str(image_path))
